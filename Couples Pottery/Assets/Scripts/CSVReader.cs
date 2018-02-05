@@ -9,15 +9,15 @@ public class CSVReader : MonoBehaviour
 	// Use this for initialization
 	public TextAsset csvFile; // Reference of CSV file
 
-    private char lineSeperater = '\n'; // It defines line seperate character
-    private char fieldSeperator = ','; // It defines field seperate chracter
+    private char lineSeparator = '\n'; // It defines line seperate character
+    private char fieldSeparator = ','; // It defines field seperate chracter
 
     // Read data from CSV file
 	// TODO: Make it so that we can request portions of the data.
-    private string[] readData()
+    public string[] readData()
     {
 		string[] easy,medium,hard,fuck;
-        string[] records = csvFile.text.Split(lineSeperater);
+        string[] records = csvFile.text.Split(lineSeparator);
         
 		/*foreach (string record in records)
         {
