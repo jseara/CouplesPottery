@@ -5,27 +5,33 @@ using UnityEngine;
 public class Scr_ClayInteract : MonoBehaviour 
 {
 	public float sculpt_strength;
-    public int sculpt_size;
+    public float sculpt_size;
 
+    private Scr_Clay clay;
 	private MeshFilter mf;
-	private Mesh mesh;
+    private MeshCollider mc;
+    private Mesh mesh;
+    private Vector3[] start_verts;
     private Vector3[] verts;
-    private Color[] colors;
+    private Vector3[] vert_speeds;
 
-	private Camera cam_main;
+    private Camera cam_main;
     List<int> soft_selects = new List<int>();
     List<float> select_distances = new List<float>();
 
 
     private void Start()
 	{
+        clay = GetComponent<Scr_Clay>();
 		mf = GetComponent<MeshFilter>();
+        mc = GetComponent<MeshCollider>();
 		mesh = mf.mesh;
-		verts = mesh.vertices;
-        colors = new Color[verts.Length];
+        start_verts = mesh.vertices;
+        verts = mesh.vertices;
+        vert_speeds = new Vector3[verts.Length];
 
 		cam_main = Camera.main;
-
+        clay.SetUp(verts);
     }
 
     private void Update()
@@ -33,61 +39,102 @@ public class Scr_ClayInteract : MonoBehaviour
 		Vector3 move_x = cam_main.transform.right * Input.GetAxis("Horizontal") * Time.deltaTime * 10;
 		Vector3 move_y = cam_main.transform.up * Input.GetAxis("Vertical") * Time.deltaTime * 10;
 		cam_main.transform.position = Vector3.Lerp(cam_main.transform.position, cam_main.transform.position + move_x + move_y, 2);
-        if (Input.GetKeyDown(KeyCode.Space))
-		{
-            Vector3 sculpt_pos = Input.mousePosition;
-            sculpt_pos.x = (sculpt_pos.x - (Screen.width / 2)) / Screen.width;
-            sculpt_pos.y = (sculpt_pos.y - (Screen.height / 2)) / Screen.height;
-            Vector3 sculpt_distance = (sculpt_pos.x * cam_main.transform.right) + (sculpt_pos.y * cam_main.transform.up);
-            sculpt_distance = transform.position + (sculpt_distance);
 
-            select_distances.Clear();
-            soft_selects.Clear() ;
-            for (int i = 0; i < verts.Length; i++)
-			{
-				Vector3 world_pos = transform.localToWorldMatrix.MultiplyPoint3x4(verts[i]);
-                float distance = Vector3.Distance(sculpt_distance, world_pos);
 
-                if (soft_selects.Count < sculpt_size)
-                {
-                    soft_selects.Add(i);
-                    select_distances.Add(distance);
-                }
-                else
-                {
-                    for (int j = 0; j < soft_selects.Count; j++)
-                    {
-                        if (distance < select_distances[j])
-                        {
-                            select_distances[j] = distance;
-                            soft_selects[j] = i;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetMouseButton(0))
         {
-            Vector3 sculpt_pos = Input.mousePosition;
-            sculpt_pos.x = (sculpt_pos.x - (Screen.width / 2)) / Screen.width;
-            sculpt_pos.y = (sculpt_pos.y - (Screen.height / 2)) / Screen.height;
+            Sculpt(1);
+        }
+        if (Input.GetMouseButton(1))
+        {
+            Sculpt(-1);
+        }
 
-            for(int i = 0; i < soft_selects.Count; i++)
-            {
-                verts[soft_selects[i]] += sculpt_pos.x * cam_main.transform.right * Time.deltaTime * .01f * sculpt_strength * (1/select_distances[i]);
-                verts[soft_selects[i]] += sculpt_pos.y * cam_main.transform.up * Time.deltaTime * .01f * sculpt_strength * (1/select_distances[i]);
-                colors[soft_selects[i]] = Color.red;
-            }
+        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+        {
+            verts = clay.NextTurn(mesh.vertices);
             mesh.vertices = verts;
-            mesh.colors = colors;
             mesh.RecalculateNormals();
             mesh.RecalculateBounds();
-            mf.mesh = mesh;
+
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            sculpt_size = 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            sculpt_size = 2;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            sculpt_size = 3;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            sculpt_size = 4;
+        }
+
     }
     private void LateUpdate()
     {
         cam_main.transform.LookAt(transform.position);
+    }
+
+    private void Sculpt(int sculpt_direction)
+    {
+        RaycastHit hit;
+        Ray sculpt_ray = cam_main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(sculpt_ray, out hit))
+        {
+            Vector3 point = hit.point;
+            point += hit.normal * .1f;
+            Matrix4x4 localToWorld = transform.localToWorldMatrix;
+            for (int i = 0; i < verts.Length; i++)
+            {
+                Vector3 vert = localToWorld.MultiplyPoint3x4(verts[i]);
+                Vector3 pointToVertex = vert - point;
+                float sculpt_modifier = 0;
+                if (pointToVertex.sqrMagnitude < 7f + (sculpt_size - 1))
+                {
+                    sculpt_modifier = sculpt_strength;
+                }
+                float attenuatedForce = (sculpt_modifier) / (1f + (pointToVertex.sqrMagnitude));
+
+                if (sculpt_direction == 1)
+                {
+                    float velocity = attenuatedForce * Time.deltaTime;
+                    Vector3 displacement = start_verts[i] - verts[i];
+                    if (displacement.magnitude < 1f)
+                    {
+                        if (displacement.magnitude * Mathf.Sign(displacement.magnitude) <= .5f)
+                        {
+                            displacement = pointToVertex.normalized * velocity;
+                        }
+                        Vector3 position = displacement.normalized * velocity;
+                        verts[i] += position * Time.deltaTime;
+                    }
+                }
+                else
+                {
+                    float velocity = attenuatedForce * Time.deltaTime;
+                    Vector3 displacement = verts[i] - start_verts[i];
+                    if (displacement.magnitude < 1f)
+                    {
+                        if (displacement.magnitude * Mathf.Sign(displacement.magnitude) <= .5f)
+                        {
+                            displacement = pointToVertex.normalized * velocity;
+                        }
+                        Vector3 position = displacement.normalized * velocity;
+                        verts[i] -= position * Time.deltaTime;
+                    }
+                }
+
+            }
+            mesh.vertices = verts;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+        }
     }
 }

@@ -185,6 +185,7 @@ GameObject:
   - component: {fileID: 177569356}
   - component: {fileID: 177569355}
   - component: {fileID: 177569354}
+  - component: {fileID: 177569357}
   m_Layer: 0
   m_Name: Prf_Clay
   m_TagString: Untagged
@@ -203,7 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 201a18585d8f3b347b584820afd90e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sculpt_strength: 30
+  sculpt_strength: 50
   sculpt_size: 4
 --- !u!114 &177569355
 MonoBehaviour:
@@ -248,6 +249,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &177569357
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 177569353}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 1
+  m_SkinWidth: 0.1
+  m_Mesh: {fileID: 4300000, guid: 1b455e79b014584448925f3ee62cd0df, type: 3}
 --- !u!33 &177569358
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -262,8 +277,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 177569353}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.62, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
