@@ -1,16 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class NewBehaviourScript : MonoBehaviour {
+public class Hotseat : MonoBehaviour 
+{
+	//Have an inactive camera
+	public Camera mainCamera;
+	public Camera blackoutCamera;
+	public Canvas blackoutCanvas;
 
+	//Enable it during hotseat, disable on button press
 	// Use this for initialization
-	void Start () {
-		
+	public void SwapToBlack()
+	{
+		mainCamera.enabled = false;
+		blackoutCamera.enabled = true;
+		blackoutCanvas.enabled = true;
+		//activate camera
+
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	public void SwapToMain()
+	{
+		blackoutCamera.enabled = false;
+		mainCamera.enabled = true;
+		blackoutCanvas.enabled = true;
 	}
 }

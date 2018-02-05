@@ -16,19 +16,33 @@ public class CSVReader : MonoBehaviour
 	// TODO: Make it so that we can request portions of the data.
     public string[] readData()
     {
+        string[][] container;
 		string[] easy,medium,hard,fuck;
+        string temp;
         string[] records = csvFile.text.Split(lineSeparator);
-        
-		/*foreach (string record in records)
+        for(int i=0; i<records.Length; i++)
         {
-            string[] fields = record.Split(fieldSeperator);
-			if (fields[0] == "Easy")
-			{
-				easy = fields
-			}
-
+            temp = records[i];
+            if (i == 0)
+            {
+                easy = temp.Split(fieldSeparator);
+                print(easy);
+            }
+            if (i == 1)
+            {
+                medium = temp.Split(fieldSeparator);
+            }
+            if (i == 2)
+            {
+                hard = temp.Split(fieldSeparator);
+            }
+            if (i == 3)
+            {
+                fuck = temp.Split(fieldSeparator);
+            }
         }
-		*/
+        //print(records[0]);
+
 		return records;
     }
     // Add data to CSV file
