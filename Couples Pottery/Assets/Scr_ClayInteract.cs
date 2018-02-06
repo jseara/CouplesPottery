@@ -14,6 +14,9 @@ public class Scr_ClayInteract : MonoBehaviour
     private Vector3[] start_verts;
     private Vector3[] verts;
     private Vector3[] vert_speeds;
+    private Vector3 start_pos;
+    private Quaternion start_rot;
+    private Renderer rend;
 
     private Camera cam_main;
     List<int> soft_selects = new List<int>();
@@ -22,6 +25,7 @@ public class Scr_ClayInteract : MonoBehaviour
 
     private void Start()
 	{
+        Time.timeScale = 0;
         clay = GetComponent<Scr_Clay>();
 		mf = GetComponent<MeshFilter>();
         mc = GetComponent<MeshCollider>();
@@ -31,51 +35,59 @@ public class Scr_ClayInteract : MonoBehaviour
         vert_speeds = new Vector3[verts.Length];
 
 		cam_main = Camera.main;
+        start_pos = cam_main.transform.position;
+        start_rot = cam_main.transform.rotation;
         clay.SetUp(verts);
+
+        rend = GetComponent<Renderer>();
     }
 
     private void Update()
 	{
-		Vector3 move_x = cam_main.transform.right * Input.GetAxis("Horizontal") * Time.deltaTime * 10;
-		Vector3 move_y = cam_main.transform.up * Input.GetAxis("Vertical") * Time.deltaTime * 10;
-		cam_main.transform.position = Vector3.Lerp(cam_main.transform.position, cam_main.transform.position + move_x + move_y, 2);
+        if (Time.timeScale != 0)
+        {
+            Vector3 move_x = cam_main.transform.right * Input.GetAxis("Horizontal") * Time.deltaTime * 10;
+            Vector3 move_y = cam_main.transform.up * Input.GetAxis("Vertical") * Time.deltaTime * 10;
+            cam_main.transform.position = Vector3.Lerp(cam_main.transform.position, cam_main.transform.position + move_x + move_y, 2);
 
 
-        if (Input.GetMouseButton(0))
-        {
-            Sculpt(1);
-        }
-        if (Input.GetMouseButton(1))
-        {
-            Sculpt(-1);
-        }
+            if (Input.GetMouseButton(0))
+            {
+                Sculpt(1);
+            }
+            if (Input.GetMouseButton(1))
+            {
+                Sculpt(-1);
+            }
 
-        if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
-        {
-            verts = clay.NextTurn(mesh.vertices);
-            mesh.vertices = verts;
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
+            if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+            {
+                verts = clay.NextTurn(mesh.vertices);
+                mesh.vertices = verts;
+                mesh.RecalculateNormals();
+                mesh.RecalculateBounds();
+                cam_main.transform.position = start_pos;
+                cam_main.transform.rotation = start_rot;
+                Scr_UI.ChangeSeat();
+            }
 
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                sculpt_size = 1;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                sculpt_size = 2;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                sculpt_size = 3;
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                sculpt_size = 4;
+            }
         }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            sculpt_size = 1;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            sculpt_size = 2;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            sculpt_size = 3;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            sculpt_size = 4;
-        }
-
     }
     private void LateUpdate()
     {
