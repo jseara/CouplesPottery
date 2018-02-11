@@ -203,11 +203,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 177569353}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 201a18585d8f3b347b584820afd90e92, type: 3}
+  m_Script: {fileID: 11500000, guid: d01243fa11562dd4bbc768973642d35d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sculpt_strength: 50
-  sculpt_size: 4
+  sculpt_size: 1
 --- !u!114 &177569355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,6 +295,8 @@ GameObject:
   - component: {fileID: 355016309}
   - component: {fileID: 355016311}
   - component: {fileID: 355016310}
+  - component: {fileID: 355016313}
+  - component: {fileID: 355016312}
   m_Layer: 5
   m_Name: Text (3)
   m_TagString: Untagged
@@ -361,6 +363,29 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 355016308}
+--- !u!114 &355016312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 355016308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 218c30ed8d3f3417d8cc35ea5cc3abd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &355016313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 355016308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 121b76e8cc5d54d93b13a5cdb0ae369d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  csvFile: {fileID: 4900000, guid: b43be0b330d6a4293953014631d1bd63, type: 3}
 --- !u!1 &544543480
 GameObject:
   m_ObjectHideFlags: 0

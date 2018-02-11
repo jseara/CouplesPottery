@@ -38,7 +38,7 @@ public class Prompt : MonoBehaviour
                 easy = temp.Split(',');
                 choice = Random.Range(1, easy.Length);
                 promptText = transform.GetComponentInParent<Text>();
-                promptText.text = "Your prompt is: " + easy[choice];
+                promptText.text = "your prompt " + easy[choice];
 				print("beep");
                 break;
             case 1:
@@ -46,21 +46,21 @@ public class Prompt : MonoBehaviour
                 medium = temp.Split(',');
                 choice = Random.Range(1, medium.Length);
                 promptText = transform.GetComponentInParent<Text>();
-                promptText.text = "Your prompt is: " + medium[choice];
+                promptText.text = "your prompt " + medium[choice];
                 break;
             case 2:
                 temp = records[2];
                 hard = temp.Split(',');
                 choice = Random.Range(1, hard.Length);
                 promptText = transform.GetComponentInParent<Text>();
-                promptText.text = "Your prompt is: " + hard[choice];
+                promptText.text = "your prompt " + hard[choice];
                 break;
             case 3:
                 temp = records[3];
                 fuck = temp.Split(',');
                 choice = Random.Range(1, fuck.Length);
                 promptText = transform.GetComponentInParent<Text>();
-                promptText.text = "Your prompt is: " + fuck[choice];
+                promptText.text = "your prompt " + fuck[choice];
                 break;
             default:
                 print("Y'all gave the wrong value for level");
