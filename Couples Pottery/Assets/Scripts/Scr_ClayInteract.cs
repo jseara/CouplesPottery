@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Scr_ClayInteract : MonoBehaviour 
 {
 	public float sculpt_strength;
     public float sculpt_size;
+    public Sprite fullBattery, mostlyFullBattery, halfFullBattery, mostlyEmptyBattery, emptyBattery;
 
     private Scr_Clay clay;
 	private MeshFilter mf;
@@ -17,11 +19,11 @@ public class Scr_ClayInteract : MonoBehaviour
     private Vector3 start_pos;
     private Quaternion start_rot;
     private Renderer rend;
-
+    private int timer;
+    private Image batteryImage;
     private Camera cam_main;
     List<int> soft_selects = new List<int>();
     List<float> select_distances = new List<float>();
-
 
     private void Start()
 	{
@@ -33,12 +35,12 @@ public class Scr_ClayInteract : MonoBehaviour
         start_verts = mesh.vertices;
         verts = mesh.vertices;
         vert_speeds = new Vector3[verts.Length];
-
+        batteryImage = GameObject.Find("Battery").GetComponent<Image>();
 		cam_main = Camera.main;
         start_pos = cam_main.transform.position;
         start_rot = cam_main.transform.rotation;
         clay.SetUp(verts);
-
+        timer = 500;
         rend = GetComponent<Renderer>();
     }
 
@@ -60,8 +62,9 @@ public class Scr_ClayInteract : MonoBehaviour
                 Sculpt(-1);
             }
 
-            if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+            if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1) || timer == 0)
             {
+                timer = 500;
                 verts = clay.NextTurn(mesh.vertices);
                 mesh.vertices = verts;
                 mesh.RecalculateNormals();
@@ -87,6 +90,29 @@ public class Scr_ClayInteract : MonoBehaviour
             {
                 sculpt_size = 4;
             }
+            
+            //Tyler, just please don't look at this code.  Just ignore it completely.  It's awful.
+            if(timer == 500)
+            {
+                batteryImage.sprite = fullBattery;
+            }
+            else if(timer == 400)
+            {
+                batteryImage.sprite = mostlyFullBattery;
+            }
+            else if (timer == 250)
+            {
+                batteryImage.sprite = halfFullBattery;
+            }
+            else if(timer == 100)
+            {
+                batteryImage.sprite = mostlyEmptyBattery;
+            }
+            else if(timer == 10)
+            {
+                batteryImage.sprite = emptyBattery;
+            }
+            timer--;
         }
     }
     private void LateUpdate()

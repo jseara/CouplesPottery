@@ -12,6 +12,7 @@ public class Prompt : MonoBehaviour
     //Level 3 = Fuck
     string[] easy, medium, hard, fuck;
     string[] records;
+    int userChoice;
     Text promptText;
     CSVReader reader;
     // Use this for initialization
@@ -19,7 +20,7 @@ public class Prompt : MonoBehaviour
     {
         reader = transform.GetComponentInParent<CSVReader>();
         records = reader.readData();
-		givePrompt(1);
+		//givePrompt(1);
         //easy = records[0];
         //medium = records[1];
         //hard = records[2];
@@ -31,13 +32,14 @@ public class Prompt : MonoBehaviour
         UnityEngine.Random rnd = new UnityEngine.Random();
         int choice;
         string temp;
+        promptText = GameObject.Find("Prompt").GetComponent<Text>();
+
         switch (level)
         {
             case 0:
                 temp = records[0];
                 easy = temp.Split(',');
                 choice = Random.Range(1, easy.Length);
-                promptText = transform.GetComponentInParent<Text>();
                 promptText.text = "your prompt " + easy[choice];
 				print("beep");
                 break;
@@ -45,21 +47,18 @@ public class Prompt : MonoBehaviour
                 temp = records[1];
                 medium = temp.Split(',');
                 choice = Random.Range(1, medium.Length);
-                promptText = transform.GetComponentInParent<Text>();
                 promptText.text = "your prompt " + medium[choice];
                 break;
             case 2:
                 temp = records[2];
                 hard = temp.Split(',');
                 choice = Random.Range(1, hard.Length);
-                promptText = transform.GetComponentInParent<Text>();
                 promptText.text = "your prompt " + hard[choice];
                 break;
             case 3:
                 temp = records[3];
                 fuck = temp.Split(',');
                 choice = Random.Range(1, fuck.Length);
-                promptText = transform.GetComponentInParent<Text>();
                 promptText.text = "your prompt " + fuck[choice];
                 break;
             default:
@@ -68,9 +67,21 @@ public class Prompt : MonoBehaviour
         }
 
     }
-    // Update is called once per frame
-    void Update()
+    
+    public void onClick()
     {
+        Dropdown menu;
+        GameObject titleScreen, gameScreen;
 
+        titleScreen = GameObject.Find("Title");
+        gameScreen = GameObject.Find("Game");
+        menu = GameObject.Find("Difficulty").GetComponent<Dropdown>();
+
+        titleScreen.SetActive(false);
+        //gameScreen.SetActive(true);
+
+        userChoice = menu.value;
+
+        givePrompt(userChoice);
     }
 }

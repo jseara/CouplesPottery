@@ -29,7 +29,7 @@ public class Scr_UI : MonoBehaviour
         turn_text = canvas.transform.GetChild(3).GetComponent<Text>();
 
         title.SetActive(true);
-        canvas.SetActive(false);
+        //canvas.SetActive(false);
         is_player_1 = true;
         turns_left = 10;
     }
@@ -85,6 +85,10 @@ public class Scr_UI : MonoBehaviour
             else
             {
                 instance.turn_text.text = "turns left:  " + instance.turns_left;
+                if(instance.turns_left == 0)
+                {
+                    instance.turn_text.text = "GAME OVER";
+                }
             }
 
             instance.is_player_1 = !instance.is_player_1;
